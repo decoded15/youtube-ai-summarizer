@@ -5,9 +5,9 @@ from config import GEMINI_API_KEY
 
 genai.configure(api_key=GEMINI_API_KEY)
 
-model = genai.GenerativeModel("gemini-2.5-flash-lite")
+model = genai.GenerativeModel("gemini-3.1-flash-lite")
 
-def create_chunks(text, chunk_size=3000):
+def create_chunks(text, chunk_size=10000):
 
     chunks = []
 
@@ -26,9 +26,7 @@ def summarize_chunks(chunks):
     for chunk in chunks:
 
         prompt = f"""
-        Summarize the following transcript section.
-
-        Transcript:
+        Summarize this transcript chunk briefly:
         {chunk}
         """
 
@@ -54,12 +52,36 @@ def combine_summaries(chunk_summaries):
 
     return response.text
 
+def single_pass_summary(transcript_text):
+
+    prompt = f"""
+    Summarize the following YouTube video transcript.
+
+    Include:
+    - Main topic
+    - Key points
+    - Important insights
+
+    Transcript:
+    {transcript_text}
+    """
+
+    response = model.generate_content(prompt)
+
+    return response.text
+
 def generate_summary(transcript_text):
 
-    chunks = create_chunks(transcript_text)
+    if len(transcript_text) < 12000:
 
-    chunk_summaries = summarize_chunks(chunks)
+        return single_pass_summary(transcript_text)
 
-    final_summary = combine_summaries(chunk_summaries)
+    else:
 
-    return final_summary
+        chunks = create_chunks(transcript_text)
+
+        chunk_summaries = summarize_chunks(chunks)
+
+        final_summary = combine_summaries(chunk_summaries)
+
+        return final_summary
