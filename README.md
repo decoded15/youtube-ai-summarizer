@@ -78,8 +78,9 @@ AI-YouTube-Video-Summarizer/
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/decoded15/AI-YouTube-Video-Summarizer.git
-cd AI-YouTube-Video-Summarizer
+git clone https://github.com/decoded15/youtube-ai-summarizer.git
+cd youtube-ai-summarizer
+
 ```
 
 ---
