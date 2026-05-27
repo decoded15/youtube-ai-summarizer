@@ -50,7 +50,7 @@ if summarize_button:
                 data = response.json()
 
             if "summary" in data:
-                st.subheader("Videp Summary")
+                st.subheader("Video Summary")
                 with st.container():
                     st.markdown(data["summary"])
 
