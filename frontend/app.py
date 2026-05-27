@@ -8,12 +8,19 @@ youtube_url = st.text_input("Enter YouTube URL")
 summarize_button = st.button("Generate Summary")
 
 if summarize_button:
-    response = requests.post(
-    "http://127.0.0.1:8000/summarize",
-    json={
-        "youtube_url": youtube_url
-    })
-    data = response.json()
+
+    with st.spinner("Summarizing video..."):
+
+        response = requests.post(
+
+            "http://127.0.0.1:8000/summarize",
+
+            json={
+                "youtube_url": youtube_url
+            }
+        )
+
+        data = response.json()
 
     if "summary" in data:
         st.subheader("Summary")
