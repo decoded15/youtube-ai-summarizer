@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from transcript import (
     extract_video_id,
@@ -16,13 +16,22 @@ class VideoRequest(BaseModel):
 @app.post("/summarize")
 def summarize_video(data: VideoRequest):
 
-    video_id = extract_video_id(data.youtube_url)
+    try:
 
-    transcript_data = get_transcript(video_id)
+        video_id = extract_video_id(data.youtube_url)
 
-    transcript_text = transcript_to_text(transcript_data)
+        transcript_data = get_transcript(video_id)
 
-    return {
-        "video_id": video_id,
-        "transcript": transcript_text
-    }
+        transcript_text = transcript_to_text(transcript_data)
+
+        return {
+            "video_id": video_id,
+            "transcript": transcript_text
+        }
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
