@@ -33,14 +33,12 @@ if summarize_button:
                 data = response.json()
 
             if "summary" in data:
-
                 st.subheader("Summary")
-
                 st.write(data["summary"])
 
             else:
-
-                st.error(data["detail"])
+                st.error(f"Error: {data['detail']}")
+                
         except requests.exceptions.ConnectionError:
 
             st.error("Backend server is not running.")
