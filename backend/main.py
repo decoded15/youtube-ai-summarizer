@@ -5,6 +5,7 @@ from transcript import (
     get_transcript,
     transcript_to_text
 )
+from summarizer import generate_summary
 
 app = FastAPI()
 
@@ -24,9 +25,11 @@ def summarize_video(data: VideoRequest):
 
         transcript_text = transcript_to_text(transcript_data)
 
+        summary = generate_summary(transcript_text)
+
         return {
             "video_id": video_id,
-            "transcript": transcript_text
+            "summary": summary
         }
 
     except Exception as e:
