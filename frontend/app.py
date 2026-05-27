@@ -9,22 +9,38 @@ summarize_button = st.button("Generate Summary")
 
 if summarize_button:
 
-    with st.spinner("Summarizing video..."):
+    if not youtube_url:
 
-        response = requests.post(
+        st.warning("Please enter a YouTube URL.")
 
-            "http://127.0.0.1:8000/summarize",
+    elif "youtube.com" not in youtube_url and "youtu.be" not in youtube_url:
 
-            json={
-                "youtube_url": youtube_url
-            }
-        )
-
-        data = response.json()
-
-    if "summary" in data:
-        st.subheader("Summary")
-        st.write(data["summary"])
+        st.error("Please enter a valid YouTube URL.")
 
     else:
-        st.error(data["detail"])
+        try:
+            with st.spinner("Summarizing video..."):
+
+                response = requests.post(
+
+                    "http://127.0.0.1:8000/summarize",
+
+                    json={
+                        "youtube_url": youtube_url
+                    }
+                )
+
+                data = response.json()
+
+            if "summary" in data:
+
+                st.subheader("Summary")
+
+                st.write(data["summary"])
+
+            else:
+
+                st.error(data["detail"])
+        except requests.exceptions.ConnectionError:
+
+            st.error("Backend server is not running.")
