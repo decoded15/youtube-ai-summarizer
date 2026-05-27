@@ -12,6 +12,7 @@ app = FastAPI()
 
 class VideoRequest(BaseModel):
     youtube_url: str
+    summary_mode: str
 
 
 @app.post("/summarize")
@@ -25,7 +26,7 @@ def summarize_video(data: VideoRequest):
 
         transcript_text = transcript_to_text(transcript_data)
 
-        summary = generate_summary(transcript_text)
+        summary = generate_summary(transcript_text, data.summary_mode)
 
         return {
             "video_id": video_id,

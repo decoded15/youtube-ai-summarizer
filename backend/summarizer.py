@@ -19,16 +19,13 @@ def create_chunks(text, chunk_size=10000):
 
     return chunks
 
-def summarize_chunks(chunks):
+def summarize_chunks(chunks, summary_mode):
 
     chunk_summaries = []
 
     for chunk in chunks:
 
-        prompt = f"""
-        Summarize this transcript chunk briefly:
-        {chunk}
-        """
+        prompt = get_prompt(chunk, summary_mode)
 
         response = model.generate_content(prompt)
 
@@ -36,15 +33,14 @@ def summarize_chunks(chunks):
 
     return chunk_summaries
 
-def combine_summaries(chunk_summaries):
+def combine_summaries(chunk_summaries, summary_mode):
 
     combined_text = "\n".join(chunk_summaries)
 
     final_prompt = f"""
-    Combine the following partial summaries
-    into one complete final summary.
+    Create a {summary_mode} style final summary
+    from these partial summaries:
 
-    Summaries:
     {combined_text}
     """
 
@@ -52,36 +48,78 @@ def combine_summaries(chunk_summaries):
 
     return response.text
 
-def single_pass_summary(transcript_text):
 
-    prompt = f"""
-    Summarize the following YouTube video transcript.
+def get_prompt(transcript_text, summary_mode):
 
-    Include:
-    - Main topic
-    - Key points
-    - Important insights
+    if summary_mode == "Short Summary":
 
-    Transcript:
-    {transcript_text}
-    """
+        return f"""
+        Give a short concise summary
+        of this YouTube transcript:
+
+        {transcript_text}
+        """
+
+    elif summary_mode == "Detailed Notes":
+
+        return f"""
+        Create detailed notes from this
+        YouTube transcript.
+
+        Include:
+        - main concepts
+        - explanations
+        - important insights
+
+        Transcript:
+        {transcript_text}
+        """
+
+    elif summary_mode == "Bullet Points":
+
+        return f"""
+        Summarize this transcript in bullet points.
+
+        Transcript:
+        {transcript_text}
+        """
+
+    elif summary_mode == "Beginner Friendly":
+
+        return f"""
+        Explain this transcript in very simple,
+        beginner-friendly language.
+
+        Transcript:
+        {transcript_text}
+        """
+    else:
+        return f"""Summarize this transcript:
+
+        {transcript_text}
+        """
+
+def single_pass_summary(transcript_text, summary_mode):
+
+    prompt = get_prompt(
+        transcript_text,
+        summary_mode
+    )
 
     response = model.generate_content(prompt)
 
     return response.text
 
-def generate_summary(transcript_text):
+def generate_summary(transcript_text, summary_mode):
 
     if len(transcript_text) < 12000:
-
-        return single_pass_summary(transcript_text)
+        return single_pass_summary(transcript_text, summary_mode)
 
     else:
-
         chunks = create_chunks(transcript_text)
 
-        chunk_summaries = summarize_chunks(chunks)
+        chunk_summaries = summarize_chunks(chunks, summary_mode)
 
-        final_summary = combine_summaries(chunk_summaries)
+        final_summary = combine_summaries(chunk_summaries, summary_mode)
 
         return final_summary

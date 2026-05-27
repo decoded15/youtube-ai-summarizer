@@ -9,6 +9,18 @@ st.caption(
 
 youtube_url = st.text_input("Enter YouTube URL")
 
+summary_mode = st.selectbox(
+
+    "Select Summary Type",
+
+    [
+        "Short Summary",
+        "Detailed Notes",
+        "Bullet Points",
+        "Beginner Friendly"
+    ]
+)
+
 summarize_button = st.button("Generate Summary")
 
 if summarize_button:
@@ -30,8 +42,9 @@ if summarize_button:
                     "http://127.0.0.1:8000/summarize",
 
                     json={
-                        "youtube_url": youtube_url
-                    }
+                        "youtube_url": youtube_url,
+                        "summary_mode": summary_mode
+                    }   
                 )
 
                 data = response.json()
