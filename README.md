@@ -57,15 +57,17 @@ AI-YouTube-Video-Summarizer/
 │   ├── summarizer.py
 │   ├── transcript.py
 │   ├── config.py
-│   ├── requirements.txt
-│   ├── .env
+│   ├── utils.py
 │
 ├── frontend/
 │   ├── app.py
 │
 ├── screenshots/
 │
+├── requirements.txt
+│
 ├── .gitignore
+│
 └── README.md
 ```
 
