@@ -8,7 +8,9 @@ def extract_video_id(youtube_url):
 
 def get_transcript(video_id):
 
-    transcript = YouTubeTranscriptApi.get_transcript(video_id)
+    api = YouTubeTranscriptApi()
+
+    transcript = api.fetch(video_id)
 
     return transcript
 
@@ -17,7 +19,7 @@ def transcript_to_text(transcript_data):
     full_text = ""
 
     for entry in transcript_data:
-        full_text += entry["text"] + " "
+        full_text += entry.text + " "
 
     return full_text
 
