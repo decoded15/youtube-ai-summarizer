@@ -3,6 +3,10 @@ import requests
 
 st.title("🎥 AI YouTube Video Summarizer")
 
+st.caption(
+    "Paste a YouTube video link to get an AI-generated summary instantly."
+)
+
 youtube_url = st.text_input("Enter YouTube URL")
 
 summarize_button = st.button("Generate Summary")
@@ -33,12 +37,13 @@ if summarize_button:
                 data = response.json()
 
             if "summary" in data:
-                st.subheader("Summary")
-                st.write(data["summary"])
+                st.subheader("Videp Summary")
+                with st.container():
+                    st.markdown(data["summary"])
 
             else:
                 st.error(f"Error: {data['detail']}")
-                
+
         except requests.exceptions.ConnectionError:
 
             st.error("Backend server is not running.")
