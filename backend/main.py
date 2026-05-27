@@ -1,7 +1,17 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
-@app.get("/")
-def home():
-    return {"message": "Backend is running successfully"}
+
+class VideoRequest(BaseModel):
+    youtube_url: str
+
+
+@app.post("/summarize")
+def summarize_video(data: VideoRequest):
+
+    return {
+        "message": "Request received successfully",
+        "youtube_url": data.youtube_url
+    }
